@@ -1,0 +1,71 @@
+<%-include('partials/header.ejs', {title: 'Home', user: user}) %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        img {
+            height: 200px;
+            height: 200px;
+            width:200px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container my-5">
+        <h1 class="text-center mb-4"><i class="fas fa-pen"></i> Edit Your Post</h1>
+        <% if (error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+        <% if (success) { %>
+            <div class="alert alert-success"><%= success %></div>
+        <% } %>
+        <form action="/posts/<%= posts.id%>?_method=put" method="post" enctype="multipart/form-data" class="bg-white p-4 rounded shadow-sm">
+            <div class="mb-3">
+                <label for="title" class="form-label"><i class="fas fa-heading"></i> Title</label>
+                <input type="text" name="title" id="title" class="form-control" placeholder="Enter post title" value="<%= posts.title%>" >
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label"><i class="fas fa-align-left"></i> Content</label>
+                <textarea name="content" id="content" cols="30" rows="10" class="form-control" placeholder="Write your content here" ><%= posts.content%></textarea>
+            </div>
+            <div class="mb-3" >
+                <label for="image" class="form-label"><i class="fas fa-image"></i> Image</label>
+                <input multiple type="file" name="image" id="image" class="form-control" >
+                <div id="imagDiv" class="mt-3">
+
+                </div>
+                <% posts?.images.forEach((image)=>{%>
+                    
+                    <img src="<%= image.url%>" alt="">
+                    <%})%>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-paper-plane"></i> Submit
+            </button>
+        </form>
+    </div>
+    <!-- <script>
+
+        const inputfield=document.getElementById('image');
+        inputfield.addEventListener('change',(e)=>{
+         const files=e.target.files
+         console.log(files);
+         
+         const previweDiv = document.getElementById('imagDiv');
+         previweDiv.innerHTML='';
+         for(let i=0;i<files.length;i++){
+            const url=URL.createObjectURL(files[i]);
+            const previweElement = document.createElement('img');
+            previweElement.src=url;
+            previweElement.classList.add();
+            previweDiv.appendChild(previweElement)
+        
+         }
+        })
+
+    </script> -->
+</body>
+</html>

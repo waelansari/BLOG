@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1, h2, h3 {
+    color: #007bff;
+}
+
+.img-fluid {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 15px;
+}
+
+.border {
+    border-color: #ddd;
+}
+
+.comments-section {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+textarea {
+    resize: none;
+    font-size: 1rem;
+}
+
+    </style>
+</head>
+<body>
+<%- include('partials/header.ejs', { title: posts?.title, user: user }) %>
+<div class="container my-4">
+    <div class="text-center">
+        <h1 class="mb-3 text-primary"><%= posts?.title %></h1>
+        <p class="text-muted">
+            <strong>By:</strong> <%= posts?.author?.username %> |
+            <strong>Posted on:</strong> <%= new Date(posts?.createdAt).toDateString() %>
+        </p>
+    </div>
+
+    <div class="mb-4">
+        <% posts?.images?.forEach((image) => { %>
+            <div class="text-center">
+                <img src="<%= image.url %>" alt="Post Image" class="img-fluid rounded" style="max-height: 300px; object-fit: cover;">
+            </div>
+        <% }) %>
+    </div>
+
+    <div class="mb-5">
+        <p class="lead text-dark"><%= posts?.content || 'No content available for this post.' %></p>
+    </div>
+
+    <% if(user?._id?.toString() === posts?.author?._id?.toString()) { %>
+        <div class="text-center mb-4">
+            <a href="/posts/<%= posts?._id %>/edit" class="btn btn-primary me-2">Edit</a>
+            <form action="/posts/<%= posts?._id %>?_method=DELETE" method="post" class="d-inline-block">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    <% } %>
+
+    <div class="comments-section">
+        <h2 class="text-secondary mb-4">Comments</h2>
+        <% if(posts?.comment?.length > 0) { %>
+            <% posts?.comment?.forEach((comment) => { %>
+                <div class="border rounded p-3 mb-3">
+                    <small class="text-muted d-block mb-2">
+                        <strong><%= comment?.author?.username %></strong> said on <%= new Date(comment?.createdAt).toDateString() %>
+                    </small>
+                    <p class="mb-2"><%= comment?.content || 'No comment content.' %></p>
+                    <% if(user?._id?.toString() === comment?.author?._id?.toString()) { %>
+                        <div>
+                            <a href="/comments/<%= comment?._id %>/edit" class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                            <form action="/comments/<%= comment?._id %>?_method=DELETE" method="post" class="d-inline-block">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </div>
+                    <% } %>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="text-danger">No comments yet. Be the first to share your thoughts!</p>
+        <% } %>
+    </div>
+
+    <div class="add-comment mt-4">
+        <h3 class="text-secondary mb-3">Add a Comment</h3>
+        <% if(user) { %>
+            <form action="/posts/<%= posts?._id %>/comments" method="post">
+                <textarea name="content" rows="4" class="form-control mb-3" placeholder="Write your comment here..."></textarea>
+                <button type="submit" class="btn btn-success">Submit Comment</button>
+            </form>
+        <% } else { %>
+            <p>Please <a href="/auth/login" class="text-primary">log in</a> to add a comment.</p>
+        <% } %>
+    </div>
+</div>
+<%- include('partials/footer.ejs') %>
+</body>
+</html>

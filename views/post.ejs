@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #007bff;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-text {
+    font-size: 0.9rem;
+}
+
+.rounded-circle {
+    border: 1px solid #ddd;
+}
+
+    </style>
+</head>
+<body>
+    <%- include('partials/header.ejs', { title: 'Enhanced Posts Page', user: user }) %>
+    <div class="container">
+        <h1 class="text-center mb-4 text-primary">Community Posts</h1>
+        <% if(posts?.length > 0) { %>
+            <% posts.forEach((post) => { %> 
+            <div class="card mb-4 shadow-sm" style="max-width: 600px; margin: 0 auto;">
+                <img src="<%= post.images?.[0]?.url || 'https://via.placeholder.com/600x200' %>" class="card-img-top" alt="Post Image">
+                <div class="card-body d-flex align-items-start">
+                    <% if(post.profilePicture) { %>
+                        <img src="<%= post.profilePicture.url %>" alt="Profile Picture" class="rounded-circle me-3" width="50" height="50">
+                    <% } else { %>
+                        <img src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg" alt="Default Avatar" class="rounded-circle me-3" width="50" height="50">
+                    <% } %>
+                    <div>
+                        <h2 class="card-title text-secondary"><%= post.title %></h2>
+                        <p class="card-text text-muted">
+                            <strong>By:</strong> <%= post.author.username %> |
+                            <strong>Posted on:</strong> <%= new Date(post.createdAt).toDateString() %>
+                        </p>
+                        <p class="card-text"><%= post.content || 'No additional content provided for this post.' %></p>
+                        <a href="/posts/<%= post._id %>" class="btn btn-outline-primary mt-2">Read More</a>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        <% } else { %>
+            <div class="text-center mt-5">
+                <p class="text-danger">No posts available. Be the first to share something amazing!</p>    
+            </div>
+        <% } %>
+    </div>
+    <%- include('partials/footer.ejs') %>
+</body>
+</html>
+

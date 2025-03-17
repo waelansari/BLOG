@@ -1,0 +1,41 @@
+<%- include('partials/header.ejs', { title: 'Edit Comment', user: user }) %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Comment</title>
+    <style>
+        textarea {
+            width: 100%;
+            resize: none;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container my-5">
+        <h1 class="text-center mb-4"><i class="fas fa-edit"></i> Edit Your Comment</h1>
+        <% if (error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+        <% if (success) { %>
+            <div class="alert alert-success"><%= success %></div>
+        <% } %>
+        <form action="/comments/<%= comment._id %>?_method=PUT" method="post" class="bg-white p-4 rounded shadow-sm">
+            <div class="mb-3">
+                <label for="content" class="form-label"><i class="fas fa-comment"></i> Comment</label>
+                <textarea 
+                    name="content" 
+                    id="content" 
+                    rows="4" 
+                    class="form-control" 
+                    placeholder="Write your comment here" 
+                    required><%= comment.content %></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-save"></i> Update Comment
+            </button>
+        </form>
+    </div>
+</body>
+</html>
